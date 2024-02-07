@@ -1,12 +1,9 @@
-import job_scraping_helper as rsh
-from helpers import common_helper as h
-from helpers import csv_helper as ch
-from helpers import json_helper as jh
+import tanqeeb_job_scraping_helper as tanqeeb_helper
 
 
 def main():
-
-    pass
+    search_urls = tanqeeb_helper.generate_search_urls()
+    print(search_urls)
 
 
 if __name__ == "__main__":
