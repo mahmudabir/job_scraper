@@ -12,6 +12,11 @@ search_url: str = (
 job_titles = ["Software Engineer", "Software Developer"]
 
 
+def start_scraping():
+    search_urls = generate_search_urls()
+    print(search_urls)
+
+
 def generate_search_urls():
     search_urls: list[str] = []
 

@@ -2,8 +2,7 @@ import tanqeeb_job_scraping_helper as tanqeeb_helper
 
 
 def main():
-    search_urls = tanqeeb_helper.generate_search_urls()
-    print(search_urls)
+    tanqeeb_helper.start_scraping()
 
 
 if __name__ == "__main__":
