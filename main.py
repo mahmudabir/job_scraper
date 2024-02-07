@@ -1,8 +1,8 @@
-import tanqeeb_job_scraping_helper as tanqeeb_helper
+import founditgulf_job_scraping_helper as founditgulf_helper
 
 
 def main():
-    tanqeeb_helper.start_scraping()
+    founditgulf_helper.start_scraping()
 
 
 if __name__ == "__main__":
