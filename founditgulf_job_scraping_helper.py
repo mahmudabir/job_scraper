@@ -3,16 +3,15 @@ import requests
 import helpers.csv_helper as ch
 import helpers.file_helper as fh
 import helpers.json_helper as jh
+from main import searching_job_titles
 from models.job_details import JobDetails
-
-searching_job_titles = ["software engineer", "software developer"]
 
 job_details_list_json_file_name = "founditgulf_job_details_list.json"
 job_list_json_file_name = "founditgulf_job_list.json"
 
 job_details_list_csv_file_name = "founditgulf_job_details_list.csv"
 
-is_caching_enabled = True
+is_caching_enabled = False
 
 
 def start_scraping():

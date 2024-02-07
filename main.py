@@ -1,7 +1,10 @@
 import founditgulf_job_scraping_helper
 
+searching_job_titles = ["software engineer", "software developer"]
+
 
 def main():
+
     founditgulf_job_scraping_helper.is_caching_enabled = False
     founditgulf_job_scraping_helper.start_scraping()
 
