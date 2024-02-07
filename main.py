@@ -1,10 +1,14 @@
-import founditgulf_job_scraping_helper as founditgulf_helper
+import founditgulf_job_scraping_helper
 
 
 def main():
-    founditgulf_helper.start_scraping()
+    founditgulf_job_scraping_helper.is_caching_enabled = False
+    founditgulf_job_scraping_helper.start_scraping()
 
 
 if __name__ == "__main__":
     print("\n")
+    print("Operation Started\n")
     main()
+    print("\n")
+    print("Operation Completed\n")

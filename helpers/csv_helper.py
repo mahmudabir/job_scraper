@@ -12,7 +12,9 @@ def list_to_csv_file(
         if data_list_type is not dict:
             data_dict_list = list(map(vars, data_list))
             try:
-                header_names: list[str] = header_names or data_list[0].__keys__()
+                header_names: list[str] = header_names or list(
+                    data_list[0].__dict__.keys()
+                )
             except Exception as e:
                 header_names: list[str] = header_names or get_all_keys(data_dict_list)
         else:
