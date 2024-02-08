@@ -4,6 +4,23 @@ import csv
 def list_to_csv_file(
     data_list: list, csv_file_path: str, header_names: list[str] = None
 ):
+    """
+    The function `list_to_csv_file` takes a list of dictionaries or objects, along with an optional list
+    of header names, and writes the data to a CSV file.
+
+    :param data_list: The `data_list` parameter is a list of data that you want to write to a CSV file.
+    Each element in the list can be either a dictionary or an object. If the elements are objects, they
+    will be converted to dictionaries using the `vars()` function
+    :type data_list: list
+    :param csv_file_path: The `csv_file_path` parameter is a string that represents the file path where
+    the CSV file will be created or overwritten. It should include the file name and the file extension
+    ".csv". For example, "data.csv" or "C:/path/to/data.csv"
+    :type csv_file_path: str
+    :param header_names: The `header_names` parameter is a list of strings that represents the column
+    names or headers for the CSV file. If this parameter is not provided, the function will try to infer
+    the column names from the data list
+    :type header_names: list[str]
+    """
 
     if data_list is not None or data_list.__len__() > 0:
 
@@ -38,6 +55,14 @@ def list_to_csv_file(
 
 
 def get_all_keys(data_list: list):
+    """
+    The function `get_all_keys` takes a list of dictionaries as input and returns a list of all unique
+    keys present in the dictionaries.
+
+    :param data_list: A list of dictionaries where each dictionary represents a data entry
+    :type data_list: list
+    :return: a list of all the unique keys from the dictionaries in the input list.
+    """
     # Initialize an empty set to collect keys
     all_keys = set()
 
@@ -53,6 +78,16 @@ def get_all_keys(data_list: list):
 
 
 def csv_file_to_list(file_path: str):
+    """
+    The function `csv_file_to_list` takes a file path as input, reads a CSV file at that path, and
+    returns a list of dictionaries where each dictionary represents a row in the CSV file.
+
+    :param file_path: The file path is a string that represents the location of the CSV file that you
+    want to convert to a list
+    :type file_path: str
+    :return: a list of dictionaries. Each dictionary represents a row in the CSV file, with the keys
+    being the column names and the values being the corresponding values in that row.
+    """
 
     with open(file_path, "r", encoding="utf8") as read_obj:
         # Return a reader object which will

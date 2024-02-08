@@ -1,9 +1,10 @@
-import requests
+# import requests
 
 import helpers.csv_helper as ch
 import helpers.file_helper as fh
 import helpers.http_helper as hh
 import helpers.json_helper as jh
+from helpers.scraping_helper import get_http_response
 from main import searching_job_titles
 from models.job_details import JobDetails
 
@@ -144,8 +145,8 @@ def fetch_jobs_by_job_title(job_title: str):
         query_params["query"] = job_title
         # params["queryEntity"] = params["queryEntity"].replace("{job_title}", job_title)
 
-        response = requests.get(
-            base_url,
+        response = get_http_response(
+            url=base_url,
             params=query_params,
             headers=http_request.headers,
             timeout=10,
@@ -206,10 +207,9 @@ def scrap_job_details(job_id):
     http_request = hh.curl_to_requests(curl_command)
     base_url, query_params = hh.parse_query_params(http_request.url)
 
-    response = requests.get(
+    response = get_http_response(
         url=base_url.replace("{job_id}", job_id),
         headers=http_request.headers,
-        timeout=5,
     )
 
     return response.json()

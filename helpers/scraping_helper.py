@@ -4,10 +4,21 @@ import requests
 from bs4 import BeautifulSoup, NavigableString, ResultSet, Tag
 
 
-def get_http_response(url: str):
+def get_http_response(url: str, params=None, headers=None, cookies=None, timeout=10):
+    """
+    The function `get_http_response` makes a GET request to a given URL and retries if there is an
+    exception, with a 5-second delay between retries.
+
+    :param url: The `url` parameter is a string that represents the URL of the HTTP resource you want to
+    retrieve
+    :type url: str
+    :return: the HTTP response object obtained by making a GET request to the specified URL.
+    """
     while True:
         try:
-            return requests.get(url, timeout=10)
+            return requests.get(
+                url, params=params, headers=headers, cookies=cookies, timeout=timeout
+            )
         except Exception as ex:
             time.sleep(5)
 
@@ -50,4 +61,17 @@ def get_value_of_attributes(
 
 
 def parse_html_content_as_string(content_str: str, features: str = "html.parser"):
+    """
+    The function `parse_html_content_as_string` takes a string containing HTML content and returns a
+    BeautifulSoup object that can be used to parse and manipulate the HTML.
+
+    :param content_str: The content_str parameter is a string that represents the HTML content that you
+    want to parse. It can be any valid HTML content
+    :type content_str: str
+    :param features: The `features` parameter is used to specify the parser to be used by BeautifulSoup
+    for parsing the HTML content. It can take different values depending on the parser library being
+    used, defaults to html.parser
+    :type features: str (optional)
+    :return: a BeautifulSoup object.
+    """
     return BeautifulSoup(content_str, features)
