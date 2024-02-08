@@ -16,9 +16,48 @@ def get_http_response(url: str, params=None, headers=None, cookies=None, timeout
     """
     while True:
         try:
-            return requests.get(
-                url, params=params, headers=headers, cookies=cookies, timeout=timeout
-            )
+            if cookies is None:
+                return requests.get(
+                    url, params=params, headers=headers, timeout=timeout
+                )
+            else:
+                return requests.get(
+                    url,
+                    params=params,
+                    headers=headers,
+                    cookies=cookies,
+                    timeout=timeout,
+                )
+        except Exception as ex:
+            time.sleep(5)
+
+
+def post_http_request(url: str, params=None, headers=None, cookies=None, timeout=10):
+    """
+    The function `get_http_response` makes a GET request to a given URL and retries if there is an
+    exception, with a 5-second delay between retries.
+
+    :param url: The `url` parameter is a string that represents the URL of the HTTP resource you want to
+    retrieve
+    :type url: str
+    :return: the HTTP response object obtained by making a GET request to the specified URL.
+    """
+    while True:
+        try:
+
+            if cookies is None:
+                return requests.post(
+                    url, params=params, headers=headers, timeout=timeout
+                )
+            else:
+                return requests.post(
+                    url,
+                    params=params,
+                    headers=headers,
+                    cookies=cookies,
+                    timeout=timeout,
+                )
+
         except Exception as ex:
             time.sleep(5)
 
