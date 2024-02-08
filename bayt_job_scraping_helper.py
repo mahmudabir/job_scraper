@@ -1,17 +1,17 @@
+import re
+
 import helpers.csv_helper as ch
 import helpers.file_helper as fh
 import helpers.http_helper as hh
 import helpers.json_helper as jh
+from constants import is_caching_enabled, searching_job_titles
 from helpers.scraping_helper import get_http_response
-from main import searching_job_titles
 from models.job_details import JobDetails
 
 job_details_list_json_file_name = "bayt_job_details_list.json"
 job_list_json_file_name = "bayt_job_list.json"
 
 job_details_list_csv_file_name = "bayt_job_details_list.csv"
-
-is_caching_enabled = False
 
 
 def start_scraping():
@@ -100,7 +100,7 @@ def scrap_job_list_from_website():
     for job_title in searching_job_titles:
         job_list = job_list.__add__(fetch_jobs_by_job_title(job_title))
 
-    return [job for job in job_list if job.get("type") is None]
+    return job_list
 
 
 def fetch_jobs_by_job_title(job_title: str):
@@ -114,23 +114,24 @@ def fetch_jobs_by_job_title(job_title: str):
     job_list = []
 
     curl_command = """
-    curl 'https://www.founditgulf.com/middleware/jobsearch?start=15&sort=1&limit=15&query=Software%20Engineer&locations=Saudi%20Arabia&queryDerived=true' \
-    -H 'authority: www.founditgulf.com' \
-    -H 'accept: application/json, text/plain, */*' \
-    -H 'accept-language: en-US,en;q=0.9' \
-    -H 'cookie: _gcl_au=1.1.83993725.1707209517; G_ENABLED_IDPS=google; WZRK_G=0154b99c518a432a8cb4d3d6542bcfbe; _fbp=fb.1.1707209518057.1578193184; ajs_anonymous_id=%2218d7d9ded6b752-0ad7e09f4b1418-4c657b58-157872-18d7d9ded6cd5b%22; NHP=true; MSUID=5d4b0fc9-5b6d-4832-81aa-42c079e89859; uuidAB=f8602a65-9651-451f-8af9-cbd0d28a32df; _ga=GA1.1.1275091489.1707209518; _ga_P9R1Y92J7R=GS1.2.1707224481.2.1.1707224492.49.0.0; _clck=zg7d0k%7C2%7Cfj3%7C0%7C1497; __gads=ID=fa9bcd912bc33673:T=1707222553:RT=1707374896:S=ALNI_MbClSQyISRduZKHH_6z834hOVfMMg; __gpi=UID=00000cfa86d57d60:T=1707222553:RT=1707374896:S=ALNI_Ma2iMvTUrMPxoZylW0V1HrGnOtwwg; __eoi=ID=dc01cbf2c7076e26:T=1707222553:RT=1707374896:S=AA-AfjY0ahpHv2j5J8hIzyYBxpIx; WZRK_S_6K9-ZK8-ZZ6Z=%7B%22p%22%3A4%2C%22s%22%3A1707374895%2C%22t%22%3A1707374911%7D; _uetsid=fc45c010c4cc11ee8ca2974b877b220b; _uetvid=fc45d430c4cc11ee9b8f9f2e4b390d47; _clsk=1305qsm%7C1707374913391%7C8%7C1%7Co.clarity.ms%2Fcollect; FCNEC=%5B%5B%22AKsRol8_ztHhFGPwc4UsTd47RxlZDU-rpRAU9uo8hkKMyrupPVnDMi7lEbdIncgt6JPvo4AjxJ-PLViZzb0GyEXAlz0lYht0OR6m51Dc_TOaJ9LyaZICTklUgl4QPh83XBNYHSF5CqA5nqSungS0eWM-TbnC_SCixQ%3D%3D%22%5D%5D; _ga_B3CBFFVVNQ=GS1.1.1707374893.11.1.1707374923.30.0.0' \
-    -H 'referer: https://www.founditgulf.com/srp/results?start=0&sort=1&limit=15&query=Software%20Engineer&locations=Saudi%20Arabia&queryDerived=true' \
-    -H 'sec-ch-ua: "Not A(Brand";v="99", "Microsoft Edge";v="121", "Chromium";v="121"' \
-    -H 'sec-ch-ua-mobile: ?0' \
-    -H 'sec-ch-ua-platform: "Windows"' \
-    -H 'sec-fetch-dest: empty' \
-    -H 'sec-fetch-mode: cors' \
-    -H 'sec-fetch-site: same-origin' \
-    -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0' \
-    -H 'x-language-code: EN' \
-    -H 'x-source-country: SA' \
-    -H 'x-source-site-context: monstergulf' \
-    --compressed
+        curl 'https://www.bayt.com/en/saudi-arabia/jobs/software-developer-jobs/?page=9' \
+        -H 'authority: www.bayt.com' \
+        -H 'accept: */*' \
+        -H 'accept-language: en-US,en;q=0.9' \
+        -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundaryaqVf0JxxkpphkkFe' \
+        -H 'cookie: brID=3826975085611352771409; cookieyes-consent=consentid:S2k4RFFzdHlnUEoxSWlCNUFEc05Jb0dWaHBaNnY1NTk,consent:yes,action:no,necessary:yes,functional:yes,analytics:yes,performance:yes,advertisement:yes; _ga=GA1.1.389913315.1707209511; __gsas=ID=41571183dd68857c:T=1707209581:RT=1707209581:S=ALNI_MZc0nqSK3NY7ayfwdyGvMgfYfVuVg; rs=t=software%2520engineer&con=saudi-arabia:t=software%2520engineer&con=international:t=software%2520developer&con=international; MSESID0=3828650276480934284453%2C0%2C0%2C0%2C48GNT9%2C0%2C5%2C630914585341f44347679dc65c1522b8; BSESINFO0=50%2CCGDOQ0%2C%2C; ISLOGGED0=0; SSD0=PCAO2llcNV6fJ0MG0eLZVQ76Te7dLYEvmy%2BFBYx3Jbl00cskHMS2pF4I8qQeRa3Z%40%40%401c31a8609029cd70; user-prefs=locale%20xx%20lang%20en%20geo%20bd; _clck=15f0ewu%7C2%7Cfj3%7C0%7C1497; aff_data={%22qs%22:%22%22%2C%22ref%22:%22https://www.bayt.com/%22}; g_state={"i_p":1707981844292,"i_l":3}; JB_SRCH_TKN=%2Bp74ax5jK44%3D1707377056; __gads=ID=b3e52d05f952ce47:T=1707209592:RT=1707377914:S=ALNI_MYkr0jGVettgiEbEqZux6SZDIVKow; __gpi=UID=00000cfa66bbb60c:T=1707209592:RT=1707377914:S=ALNI_MZO6Vj4jVeqX7m5pLPjgtZYeEnTcg; __eoi=ID=2b27901c35bde8bf:T=1707209592:RT=1707377914:S=AA-AfjYMri6wBpQNZpRp06P5Yiu8; _uetsid=35fbd8f0c65511eeb9e88169b8962376; _uetvid=35fc88d0c65511ee9f6eb97066c9dc83; NaviPageUrl=https://www.bayt.com/en/saudi-arabia/jobs/maintenance-engineer-electrical-engineer-4928321/; userJobId=4928321; userSearchKeyword=software%20engineer%2Csoftware%20developer; _ga_1NKPLGNKKD=GS1.1.1707380398.5.1.1707382027.46.0.0; _clsk=73hub%7C1707382031479%7C29%7C1%7Co.clarity.ms%2Fcollect' \
+        -H 'origin: https://www.bayt.com' \
+        -H 'referer: https://www.bayt.com/en/saudi-arabia/jobs/software-developer-jobs/?page=4' \
+        -H 'sec-ch-ua: "Not A(Brand";v="99", "Microsoft Edge";v="121", "Chromium";v="121"' \
+        -H 'sec-ch-ua-mobile: ?0' \
+        -H 'sec-ch-ua-platform: "Windows"' \
+        -H 'sec-fetch-dest: empty' \
+        -H 'sec-fetch-mode: cors' \
+        -H 'sec-fetch-site: same-origin' \
+        -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0' \
+        -H 'x-requested-with: XMLHttpRequest' \
+        --data-raw $'------WebKitFormBoundaryaqVf0JxxkpphkkFe\r\nContent-Disposition: form-data; name="listOnly"\r\n\r\ntrue\r\n------WebKitFormBoundaryaqVf0JxxkpphkkFe--\r\n' \
+        --compressed
     """
 
     http_request = hh.curl_to_requests(curl_command)
@@ -182,54 +183,30 @@ def scrap_all_job_details_from_website(job_list):
 
 def scrap_job_details(job_id):
 
-    # For Bayt job details scrap
-    # response = requests.get(
-    #     "https://www.bayt.com/en/saudi-arabia/jobs/maintenance-engineer-electrical-engineer-4928321/",
-    #     timeout=5,
-    # )
-
-    # response_text = response.text
-
-    # json_string = (
-    #     response_text.split("<title>")[0]
-    #     .split("<script>")[1]
-    #     .split("</script>")[0]
-    #     .split("B8v=")[1]
-    #     .replace(";", "")
-    # )
-
-    # json_details_obj = json.loads(json_string)
-    # print(json_details_obj)
-    # print()
-
-    # For Bayt job details scrap
-
-    curl_command = """
-    curl 'https://www.founditgulf.com/middleware/jobdetail/{job_id}' \
-    -H 'authority: www.founditgulf.com' \
-    -H 'accept: application/json, text/plain, */*' \
-    -H 'accept-language: en-US,en;q=0.9' \
-    -H 'cookie: _gcl_au=1.1.83993725.1707209517; G_ENABLED_IDPS=google; WZRK_G=0154b99c518a432a8cb4d3d6542bcfbe; _fbp=fb.1.1707209518057.1578193184; ajs_anonymous_id=%2218d7d9ded6b752-0ad7e09f4b1418-4c657b58-157872-18d7d9ded6cd5b%22; NHP=true; MSUID=5d4b0fc9-5b6d-4832-81aa-42c079e89859; uuidAB=f8602a65-9651-451f-8af9-cbd0d28a32df; _ga=GA1.1.1275091489.1707209518; _ga_P9R1Y92J7R=GS1.2.1707224481.2.1.1707224492.49.0.0; _clck=zg7d0k%7C2%7Cfj3%7C0%7C1497; __gads=ID=fa9bcd912bc33673:T=1707222553:RT=1707370163:S=ALNI_MbClSQyISRduZKHH_6z834hOVfMMg; __gpi=UID=00000cfa86d57d60:T=1707222553:RT=1707370163:S=ALNI_Ma2iMvTUrMPxoZylW0V1HrGnOtwwg; __eoi=ID=dc01cbf2c7076e26:T=1707222553:RT=1707370163:S=AA-AfjY0ahpHv2j5J8hIzyYBxpIx; _uetsid=fc45c010c4cc11ee8ca2974b877b220b; _uetvid=fc45d430c4cc11ee9b8f9f2e4b390d47; WZRK_S_6K9-ZK8-ZZ6Z=%7B%22p%22%3A7%2C%22s%22%3A1707369801%2C%22t%22%3A1707370171%7D; _clsk=77l0bj%7C1707370172656%7C10%7C1%7Co.clarity.ms%2Fcollect; _ga_B3CBFFVVNQ=GS1.1.1707369798.10.1.1707370172.50.0.0; FCNEC=%5B%5B%22AKsRol9BoWz8JsEuqc1pqvXzNAO-ofAaafLbDcrOitqGZMAql9qHBLdcKInWrBePt-ePvdAHtlmKvaRDGhkImjFsjTeNG1-2WEjUTXkWyx1tQi0R1atuV_tAdb242EpDPoifHVE2ESBm-m4anDNGTl5rkpm2JlOG_Q%3D%3D%22%5D%5D' \
-    -H 'referer: https://www.founditgulf.com/srp/results?query=Software+Developer&locations=Saudi+Arabia&searchId=05938aaa-99b7-4426-a017-f74db2932699' \
-    -H 'sec-ch-ua: "Not A(Brand";v="99", "Microsoft Edge";v="121", "Chromium";v="121"' \
-    -H 'sec-ch-ua-mobile: ?0' \
-    -H 'sec-ch-ua-platform: "Windows"' \
-    -H 'sec-fetch-dest: empty' \
-    -H 'sec-fetch-mode: cors' \
-    -H 'sec-fetch-site: same-origin' \
-    -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0' \
-    -H 'x-language-code: EN' \
-    -H 'x-source-country: SA' \
-    -H 'x-source-site-context: monstergulf' \
-    --compressed
-    """
-
-    http_request = hh.curl_to_requests(curl_command)
-    base_url, query_params = hh.parse_query_params(http_request.url)
-
     response = get_http_response(
-        url=base_url.replace("{job_id}", job_id),
-        headers=http_request.headers,
+        f"https://www.bayt.com/en/saudi-arabia/jobs/{job_id}/",
+        timeout=5,
     )
 
-    return response.json()
+    response_text = response.text
+
+    json_string = (
+        response_text.split("<title>")[0]
+        .split("<script>")[1]
+        .split("</script>")[0]
+        .split("B8v=")[1]
+        .replace(";", "")
+    )
+
+    json_details_obj = jh.json_string_to_data(json_string)
+    return json_details_obj
+
+
+def generate_job_path_parameter(job_title, job_id):
+    path_param = (
+        re.sub(r"[^a-zA-Z0-9]+", "-", job_title)
+        .lower()
+        .strip("-")
+        .__add__(f"-{job_id}")
+    )
+    return path_param

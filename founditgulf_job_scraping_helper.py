@@ -2,8 +2,8 @@ import helpers.csv_helper as ch
 import helpers.file_helper as fh
 import helpers.http_helper as hh
 import helpers.json_helper as jh
+from constants import is_caching_enabled, searching_job_titles
 from helpers.scraping_helper import get_http_response
-from main import searching_job_titles
 from models.job_details import JobDetails
 
 job_details_list_json_file_name = "founditgulf_job_details_list.json"
