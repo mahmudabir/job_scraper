@@ -6,10 +6,10 @@ from helpers.scraping_helper import get_http_response
 from main import searching_job_titles
 from models.job_details import JobDetails
 
-job_details_list_json_file_name = "founditgulf_job_details_list.json"
-job_list_json_file_name = "founditgulf_job_list.json"
+job_details_list_json_file_name = "bayt_job_details_list.json"
+job_list_json_file_name = "bayt_job_list.json"
 
-job_details_list_csv_file_name = "founditgulf_job_details_list.csv"
+job_details_list_csv_file_name = "bayt_job_details_list.csv"
 
 is_caching_enabled = False
 
@@ -181,6 +181,28 @@ def scrap_all_job_details_from_website(job_list):
 
 
 def scrap_job_details(job_id):
+
+    # For Bayt job details scrap
+    # response = requests.get(
+    #     "https://www.bayt.com/en/saudi-arabia/jobs/maintenance-engineer-electrical-engineer-4928321/",
+    #     timeout=5,
+    # )
+
+    # response_text = response.text
+
+    # json_string = (
+    #     response_text.split("<title>")[0]
+    #     .split("<script>")[1]
+    #     .split("</script>")[0]
+    #     .split("B8v=")[1]
+    #     .replace(";", "")
+    # )
+
+    # json_details_obj = json.loads(json_string)
+    # print(json_details_obj)
+    # print()
+
+    # For Bayt job details scrap
 
     curl_command = """
     curl 'https://www.founditgulf.com/middleware/jobdetail/{job_id}' \
