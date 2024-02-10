@@ -3,7 +3,6 @@ import helpers.file_helper as fh
 import helpers.http_helper as hh
 import helpers.json_helper as jh
 from constants import is_caching_enabled, searching_job_titles
-from helpers.scraping_helper import get_http_response
 from models.job_details import JobDetails
 
 job_details_list_json_file_name = "founditgulf_job_details_list.json"
@@ -143,7 +142,8 @@ def fetch_jobs_by_job_title(job_title: str):
         query_params["query"] = job_title
         # params["queryEntity"] = params["queryEntity"].replace("{job_title}", job_title)
 
-        response = get_http_response(
+        response = hh.make_http_request(
+            "GET",
             url=base_url,
             params=query_params,
             headers=http_request.headers,
@@ -205,7 +205,8 @@ def scrap_job_details(job_id):
     http_request = hh.curl_to_requests(curl_command)
     base_url, query_params = hh.parse_query_params(http_request.url)
 
-    response = get_http_response(
+    response = hh.make_http_request(
+        "GET",
         url=base_url.replace("{job_id}", job_id),
         headers=http_request.headers,
     )
