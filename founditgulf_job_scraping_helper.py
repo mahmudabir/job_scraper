@@ -10,8 +10,6 @@ job_list_json_file_name = "founditgulf_job_list.json"
 
 job_details_list_csv_file_name = "founditgulf_job_details_list.csv"
 
-is_caching_enabled = False
-
 
 def start_scraping():
 
@@ -168,15 +166,15 @@ def fetch_jobs_by_job_title(job_title: str):
 
 def scrap_all_job_details_from_website(job_list):
 
-    print(f"Total job count: {len(job_list)}")
+    print(f"Total founditgulf job count: {len(job_list)}")
 
     job_details_list = []
 
     for job in job_list:
         job_details_list.append(scrap_job_details(job.get("id")))
-        print(f"Fetched job count: {len(job_details_list)}", end="\r")
+        print(f"Fetched founditgulf job count: {len(job_details_list)}", end="\r")
 
-    print(f"Fetched job count: {len(job_details_list)}")
+    print(f"Fetched founditgulf job count: {len(job_details_list)}")
     return job_details_list
 
 

@@ -1,14 +1,12 @@
 import bayt_job_scraping_helper
 import constants
-
-# import founditgulf_job_scraping_helper
+import founditgulf_job_scraping_helper
 
 
 def main():
-    constants.is_caching_enabled = True
+    constants.is_caching_enabled = False
 
-    # founditgulf_job_scraping_helper.start_scraping()
-
+    founditgulf_job_scraping_helper.start_scraping()
     bayt_job_scraping_helper.start_scraping()
 
 
