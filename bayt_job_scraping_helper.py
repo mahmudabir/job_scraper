@@ -125,6 +125,8 @@ def fetch_jobs_by_job_title(job_titles: list[str]):
 
             is_last_page = next_page_button.get("class").count("u-none") > 0
 
+    print(f"Fetched bayt job count: {len(job_list)}")
+    print("Fetched all bayt jobs\n")
     return job_list
 
 

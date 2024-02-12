@@ -82,6 +82,7 @@ def get_all_job_details_list(job_list):
         or job_details_list_string == "[]"
     ):
         job_details_list = scrap_all_job_details_from_website(job_list)
+        print("Fetched all founditgulf jobs\n")
         fh.save_string_into_file(
             jh.data_to_json_string(job_details_list), job_details_list_json_file_name
         )
