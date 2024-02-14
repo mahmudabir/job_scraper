@@ -194,11 +194,33 @@ def fetch_jobs_by_job_title(job_titles: list[str]):
                     "h2", {"class": "mb-2 hover-title fs-16 fs-18-lg"}
                 ).text.strip()
 
+                company_details_tag_list = job_card_tag.find_all(
+                    "span", {"class": "pr-2 pb-1 d-block d-lg-inline-block"}
+                )
+
                 company_name = ""
                 location = ""
 
+                for company_details_tag_item in company_details_tag_list:
+                    company_details_tag: Tag | NavigableString | None = (
+                        company_details_tag_item
+                    )
+
+                    if (
+                        company_details_tag.find("i", "fas fa-map-marker-alt mr-2")
+                        is not None
+                    ):
+                        location = company_details_tag.text.strip()
+                    elif (
+                        company_details_tag.find("i", "fas fa-building mr-2")
+                        is not None
+                    ):
+                        company_name = company_details_tag.text.strip()
+
                 job_details = JobDetails(
-                    job_title=job_title, location=location, company_name=company_name
+                    job_title=job_title,
+                    location=location,
+                    company_name=company_name,
                 )
 
                 job_list.append(job_details)
